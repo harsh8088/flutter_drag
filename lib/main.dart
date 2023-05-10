@@ -73,11 +73,12 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   void _itemRemovedFromCustomerCart({
-    required Item item,
     required Customer customer,
   }) {
+    print("_itemRemovedFromCustomerCart");
+    print("customer :${customer.name},items:${customer.items.length}");
     setState(() {
-      customer.items.removeAt(_items.length - 1);
+      customer.items.removeAt(customer.items.length - 1);
     });
   }
 
@@ -183,6 +184,9 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
               hasItems: customer.items.isNotEmpty,
               highlighted: candidateItems.isNotEmpty,
               customer: customer,
+              onPressed: () {
+                _itemRemovedFromCustomerCart(customer: customer);
+              },
             );
           },
           onAccept: (item) {
@@ -200,16 +204,17 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
 }
 
 class CustomerCart extends StatelessWidget {
-  const CustomerCart({
-    super.key,
-    required this.customer,
-    this.highlighted = false,
-    this.hasItems = false,
-  });
+  const CustomerCart(
+      {super.key,
+      required this.customer,
+      this.highlighted = false,
+      this.hasItems = false,
+      required this.onPressed});
 
   final Customer customer;
   final bool highlighted;
   final bool hasItems;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -229,20 +234,23 @@ class CustomerCart extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              hasItems?Row(
-                children: [
-                  const Spacer(),
-                  InkWell(
-                    onTap:(){
-                    },
-                    child: const Icon(
-                      Icons.remove_circle,
-                      size: 25,
-                      color: Colors.red,
+              hasItems
+                  ? Row(
+                      children: [
+                        const Spacer(),
+                        InkWell(
+                          onTap: onPressed,
+                          child: const Icon(
+                            Icons.remove_circle,
+                            size: 25,
+                            color: Colors.red,
+                          ),
+                        )
+                      ],
+                    )
+                  : const SizedBox(
+                      height: 25,
                     ),
-                  )
-                ],
-              ):SizedBox(height: 25,),
               ClipOval(
                 child: SizedBox(
                   width: 46,
@@ -295,7 +303,6 @@ class CustomerCart extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class MenuListItem extends StatelessWidget {
