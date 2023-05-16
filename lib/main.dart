@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,22 +13,22 @@ void main() {
 const List<Item> _items = [
   Item(
     name: 'Spinach Pizza',
-    totalPriceCents: 1299,
-    uid: '1',
+    totalPriceCents: 299,
+    uid: '101',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food1.jpg'),
   ),
   Item(
     name: 'Veggie Delight',
-    totalPriceCents: 799,
-    uid: '2',
+    totalPriceCents: 499,
+    uid: '102',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food2.jpg'),
   ),
   Item(
     name: 'Chicken Parmesan',
-    totalPriceCents: 1499,
-    uid: '3',
+    totalPriceCents: 629,
+    uid: '103',
     imageProvider: NetworkImage('https://flutter'
         '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
   ),
@@ -75,8 +76,10 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   void _itemRemovedFromCustomerCart({
     required Customer customer,
   }) {
-    print("_itemRemovedFromCustomerCart");
-    print("customer :${customer.name},items:${customer.items.length}");
+    if (kDebugMode) {
+      print("_itemRemovedFromCustomerCart");
+      print("customer :${customer.name},items:${customer.items.length}");
+    }
     setState(() {
       customer.items.removeAt(customer.items.length - 1);
     });
@@ -425,7 +428,7 @@ class Item {
   final ImageProvider imageProvider;
 
   String get formattedTotalItemPrice =>
-      '\$${(totalPriceCents / 100.0).toStringAsFixed(2)}';
+      '\₹${(totalPriceCents / 1.0).toStringAsFixed(2)}';
 }
 
 class Customer {
@@ -442,6 +445,6 @@ class Customer {
   String get formattedTotalItemPrice {
     final totalPriceCents =
         items.fold<int>(0, (prev, item) => prev + item.totalPriceCents);
-    return '\$${(totalPriceCents / 100.0).toStringAsFixed(2)}';
+    return '\₹${(totalPriceCents / 1.0).toStringAsFixed(2)}';
   }
 }
